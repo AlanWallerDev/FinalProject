@@ -1,40 +1,47 @@
 package com.example.multibluetoothtesting;
 
 import android.Manifest;
-import android.app.DialogFragment;
-import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
-import com.ramimartin.multibluetooth.activity.BluetoothActivity;
+import com.ramimartin.multibluetooth.activity.BluetoothFragmentActivity;
 import com.ramimartin.multibluetooth.bluetooth.manager.BluetoothManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends BluetoothActivity implements DiscoveredDialogFragment.DiscoveredDialogListener{
+public class MainActivity extends BluetoothFragmentActivity implements DiscoveredDialogFragment.DiscoveredDialogListener {
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
-    //inject the views into our activity
     @BindView(R.id.listview)
     ListView mListView;
     ArrayAdapter<String> mAdapter;
     List<String> mListLog;
 
-    @BindView(R.id.clientTog)
+    @BindView(R.id.communication)
+    EditText mEditText;
+    @BindView(R.id.send)
+    ImageButton mSendBtn;
+
+    @BindView(R.id.client)
     ToggleButton mClientToggleBtn;
-    @BindView(R.id.serverTog)
+    @BindView(R.id.serveur)
     ToggleButton mServerToggleBtn;
 
     @BindView(R.id.connect)
@@ -46,6 +53,7 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         mListLog = new ArrayList<>();
         mAdapter = new ArrayAdapter<>(this, R.layout.item_console, mListLog);
@@ -63,17 +71,13 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
         } else {
             // TODO stuff if u need
         }
+
         setMessageMode(BluetoothManager.MessageMode.String);
     }
 
     @Override
     public String setUUIDappIdentifier() {
-        return "e0917680-d427-11e4-8830";
-    }
-
-    @Override
-    public int myNbrClientMax() {
-        return 7;
+        return "f520cf2c-6487-11e7-907b";
     }
 
     @Override
@@ -85,7 +89,12 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
         }
     }
 
-    @OnClick(R.id.serverTog)
+    @Override
+    public int myNbrClientMax() {
+        return 7;
+    }
+
+    @OnClick(R.id.serveur)
     public void serverType() {
         setLogText("===> Start Server ! Your mac address : " + mBluetoothManager.getYourBtMacAddress());
         setTimeDiscoverable(BluetoothManager.BLUETOOTH_TIME_DICOVERY_3600_SEC);
@@ -96,7 +105,7 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
         mConnectBtn.setText("Scan Devices");
     }
 
-    @OnClick(R.id.clientTog)
+    @OnClick(R.id.client)
     public void clientType() {
         setLogText("===> Start Client ! Your mac address : " + mBluetoothManager.getYourBtMacAddress());
         setTimeDiscoverable(BluetoothManager.BLUETOOTH_TIME_DICOVERY_120_SEC);
@@ -122,9 +131,32 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
         disconnectServer();
     }
 
+    @OnClick(R.id.send)
+    public void send() {
+        if (isConnected()) {
+            sendMessageStringToAll(mEditText.getText().toString());
+            setLogText("===> Send : " + mEditText.getText().toString());
+        }
+    }
+
     @Override
     public void onBluetoothStartDiscovery() {
         setLogText("===> Start discovering ! Your mac address : " + mBluetoothManager.getYourBtMacAddress());
+    }
+
+    @Override
+    public void onBluetoothMsgStringReceived(String messageReceive) {
+        setLogText("===> receive msg : " + messageReceive);
+    }
+
+    @Override
+    public void onBluetoothMsgObjectReceived(Object o) {
+
+    }
+
+    @Override
+    public void onBluetoothMsgBytesReceived(byte[] bytes) {
+
     }
 
     @Override
@@ -138,68 +170,44 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
 
     @Override
     public void onClientConnectionSuccess() {
-        setLogText("===> Client Connection success !");
-        //mEditText.setText("Client");
-        //mSendBtn.setEnabled(true);
+        setLogText("===> Client Connexion success !");
+        mEditText.setText("Client");
+        mSendBtn.setEnabled(true);
         mConnectBtn.setEnabled(false);
         mDisconnect.setEnabled(true);
     }
 
     @Override
     public void onClientConnectionFail() {
-        setLogText("===> Client Connection fail !");
+        setLogText("===> Client Connexion fail !");
         mServerToggleBtn.setChecked(false);
         mClientToggleBtn.setChecked(false);
         mDisconnect.setEnabled(false);
         mConnectBtn.setEnabled(false);
         mConnectBtn.setText("Connect");
-        //mEditText.setText("");
+        mEditText.setText("");
     }
 
     @Override
     public void onServeurConnectionSuccess() {
-        setLogText("===> Server Connection success !");
-        //mEditText.setText("Server");
+        setLogText("===> Serveur Connexion success !");
+        mEditText.setText("Server");
         mDisconnect.setEnabled(true);
     }
 
     @Override
     public void onServeurConnectionFail() {
-        setLogText("===> Server Connection fail !");
-    }
-
-    @Override
-    public void onBluetoothMsgStringReceived(String messageReceive) {
-        setLogText("===> receive msg : " + messageReceive);
-    }
-
-    @Override
-    public void onBluetoothMsgObjectReceived(Object o) {
-    }
-
-    @Override
-    public void onBluetoothMsgBytesReceived(byte[] bytes) {
+        setLogText("===> Serveur Connexion fail !");
     }
 
     @Override
     public void onBluetoothNotAviable() {
         setLogText("===> Bluetooth not available on this device");
-        //mSendBtn.setEnabled(false);
+        mSendBtn.setEnabled(false);
         mClientToggleBtn.setEnabled(false);
         mServerToggleBtn.setEnabled(false);
         mConnectBtn.setEnabled(false);
         mDisconnect.setEnabled(false);
-    }
-
-    @Override
-    public void onDeviceSelectedForConnection(String addressMac) {
-        setLogText("===> Connect to " + addressMac);
-        createClient(addressMac);
-    }
-
-    @Override
-    public void onScanClicked() {
-        scanAllBluetoothDevice();
     }
 
     public void setLogText(String text) {
@@ -221,4 +229,14 @@ public class MainActivity extends BluetoothActivity implements DiscoveredDialogF
         ft.commitAllowingStateLoss();
     }
 
+    @Override
+    public void onDeviceSelectedForConnection(String addressMac) {
+        setLogText("===> Connect to " + addressMac);
+        createClient(addressMac);
+    }
+
+    @Override
+    public void onScanClicked() {
+        scanAllBluetoothDevice();
+    }
 }

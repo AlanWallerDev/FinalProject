@@ -3,6 +3,7 @@ package com.example.multibluetoothtesting;
 import android.bluetooth.BluetoothDevice;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -83,7 +83,7 @@ public class DiscoveredDialogFragment extends DialogFragment {
     }
 
 
-    @OnClick(R.id.scan)
+    @OnClick(R2.id.scan)
     public void scan() {
         mDiscoveredDialogListener.onScanClicked();
     }
