@@ -5,8 +5,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.DialogFragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -224,7 +224,7 @@ public class MainActivity extends BluetoothFragmentActivity implements Discovere
     }
 
     private void showDialogFragment(DialogFragment dialogFragment, String tag) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(dialogFragment, tag);
         ft.commitAllowingStateLoss();
     }
