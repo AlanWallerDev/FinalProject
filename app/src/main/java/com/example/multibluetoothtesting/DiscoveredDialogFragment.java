@@ -3,7 +3,7 @@ package com.example.multibluetoothtesting;
 import android.bluetooth.BluetoothDevice;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
