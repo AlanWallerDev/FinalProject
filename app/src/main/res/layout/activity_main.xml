@@ -14,25 +14,45 @@
 
     </ListView>
 
+    <EditText
+        android:id="@+id/communication"
+        android:layout_above="@+id/connexion"
+        android:singleLine="true"
+        android:layout_toLeftOf="@+id/send"
+        android:layout_marginBottom="2dp"
+        android:textColor="@android:color/white"
+        android:dividerHeight="0dip"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ImageButton
+        android:id="@+id/send"
+        android:layout_above="@+id/connexion"
+        android:layout_alignTop="@+id/communication"
+        android:layout_alignParentRight="true"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
-        android:id="@+id/connectionBtns"
+        android:id="@+id/connexion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/connect"
         android:padding="2dp">
 
         <ToggleButton
-            android:id="@+id/clientTog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/client"
             android:layout_weight="1"
             android:enabled="true"
             android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textOff="Client"
-            android:textOn="Client" />
+            android:textOn="Client"/>
 
         <ToggleButton
-            android:id="@+id/serverTog"
+            android:id="@+id/serveur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
